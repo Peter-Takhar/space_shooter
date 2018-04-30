@@ -201,8 +201,8 @@ function moveShip(e){
 function shoot(){
   var b = new createjs.Bitmap(bltImg);
 
-  b.x = ship.x + 13;
-  b.y = ship.y - 20;
+  b.x = ship.x + 43;
+  b.y = ship.y - 30;
 
   bullets.addChild(b);
   console.log("fired");
