@@ -3,4 +3,7 @@ By: Parminder Takhar
 
 A simple Space shooter game made using CreateJS.
 
-April 30, 2018 --> Very barebones right.
+April 30, 2018 --> Very barebones right now.
+               -->Added ship + movement functionality
+               -->Added shoot functionality
+               -->Added moving placeholder background
