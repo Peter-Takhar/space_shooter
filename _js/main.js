@@ -53,6 +53,9 @@ var tkr = new Object(); //used as a Ticker listener
 var timerSource; //references a setInterval method
 
 
+//bullet spritesheet
+var bulletSpritesheet;
+
 //music
 var mInstance = null;
 function Main()
@@ -76,16 +79,16 @@ function Main()
   ];
   //array of extensions used when loading sound
   createjs.Sound.alternateExtensions = ["mp3", "wav"];
-  //createjs.Sound.on("fileload", handleLoad);
+  createjs.Sound.on("fileload", handleLoad);
 
   //createjs.Sound.registerSounds(sounds, assetPath); --> have to fix 4 mutiple
-  /*
+
   createjs.Sound.registerSound(assetPath + sounds[2].src, sounds[2].id);
   function handleLoad(e){
     //make an AbstractSoundIstance to control sound
     mIstance = createjs.Sound.play("mMain", {loop:-1});
   }
-  */
+
   //load gfx
   bgImg.src = 'resources/bg.png';
   bgImg.name = 'bg';
@@ -139,9 +142,7 @@ function loadGfx(e){
   //if (e.target.name = 'bg'){bg = new createjs.Bitmap(bgImg);}
   if (e.target.name = 'bg2'){bg2 = new createjs.Bitmap(bg2Img);}
   if (e.target.name = 'ship'){ship = new createjs.Bitmap(sImg);}
-  if (e.target.name = 'bullet'){
 
-  }
   gfxLoaded++;
 
   if (gfxLoaded == 3){
@@ -254,7 +255,7 @@ function update(){
 
   //move bullets
   for (var i=0; i<bullets.children.length; i++){
-    bullets.children[i].y -= 10;
+    bullets.children[i].y -= 10 ;
 
     //remove offstage bullets
     if (bullets.children[i].y < -20){
