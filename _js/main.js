@@ -97,7 +97,7 @@ function Main()
 
   sImg.src = 'resources/ship.png';
   sImg.name = 'ship';
-//  sImg.onload = loadGfx;
+  sImg.onload = loadGfx;
 
   eImg.src = 'resources/enemy1.png';
   eImg.name = 'enemy';
@@ -138,11 +138,11 @@ function loadGfx(e){
 
   //if (e.target.name = 'bg'){bg = new createjs.Bitmap(bgImg);}
   if (e.target.name = 'bg2'){bg2 = new createjs.Bitmap(bg2Img);}
-  //if (e.target.name = 'ship'){ship = new createjs.Bitmap(sImg);}
+  if (e.target.name = 'ship'){ship = new createjs.Bitmap(sImg);}
 
   gfxLoaded++;
 
-  if (gfxLoaded == 1){
+  if (gfxLoaded == 2){
     addGameView();
   }
 }
@@ -152,10 +152,11 @@ function loadGfx(e){
 //  such as lives counter, backgrounds, etc.
 
 function addGameView(){
-  /*
+
   ship.x = centerX - 18.5;
   ship.y = 480 + 34;
 
+  /*
   //add lives
   for (var i=0; i<3; i++){
     var l = new createjs.Bitmap(lImg);
@@ -166,6 +167,7 @@ function addGameView(){
     lives.addChild(l);
     stage.update();
   }
+
 
   //score text
 
@@ -178,18 +180,19 @@ function addGameView(){
 
 
   //second background
-  bg2.y = -1200;
+  bg2.y = -1100;
 
   //add gfx to stage and tween ship
-  stage.addChild(bg2);
-  //createjs.Tween.get(ship).to({y:425}, 1000).call(startGame);
+  stage.addChild(bg2, ship);
+
+  createjs.Tween.get(ship).to({y:400}, 1000).call(startGame);
 }
 
-/*
+
 function moveShip(e){
   ship.x = e.stageX - 18.5;
 }
-*/
+
 
 /*
 function shoot(){
@@ -218,19 +221,20 @@ function addEnemy(){
 */
 
 //function to add listeners to stage and time
-/*
+
 function startGame(){
 
-  stage.onMouseMove = moveShip;
-  bg.onPress = shoot;
-  bg2.onPress = shoot;
+  stage.on("stagemousemove", moveShip);
 
-  createjs.Ticker.on(tkr, false);
-  tkr.tick = update;
+//  bg.onPress = shoot;
+//bg2.onPress = shoot;
 
-  timerSource = setInterval('addEnemy()', 1000);
+  //createjs.Ticker.on(tkr, false);
+  //tkr.tick = update;
+
+  //timerSource = setInterval('addEnemy()', 1000);
 }
-*/
+
 
 
 function update(){
