@@ -76,16 +76,16 @@ function Main()
   ];
   //array of extensions used when loading sound
   createjs.Sound.alternateExtensions = ["mp3", "wav"];
-  createjs.Sound.on("fileload", handleLoad);
+  //createjs.Sound.on("fileload", handleLoad);
 
   //createjs.Sound.registerSounds(sounds, assetPath); --> have to fix 4 mutiple
-
+  /*
   createjs.Sound.registerSound(assetPath + sounds[2].src, sounds[2].id);
   function handleLoad(e){
     //make an AbstractSoundIstance to control sound
     mIstance = createjs.Sound.play("mMain", {loop:-1});
   }
-
+  */
   //load gfx
   bgImg.src = 'resources/bg.png';
   bgImg.name = 'bg';
@@ -113,7 +113,7 @@ function Main()
 
   bltImg.src = 'resources/bullet.png';
   bltImg.name = 'bullet';
-//  bltImg.onload = loadGfx;
+  bltImg.onload = loadGfx;
 
   winImg.src = 'resources/win.png';
   winImg.name = 'win';
@@ -139,10 +139,12 @@ function loadGfx(e){
   //if (e.target.name = 'bg'){bg = new createjs.Bitmap(bgImg);}
   if (e.target.name = 'bg2'){bg2 = new createjs.Bitmap(bg2Img);}
   if (e.target.name = 'ship'){ship = new createjs.Bitmap(sImg);}
+  if (e.target.name = 'bullet'){
 
+  }
   gfxLoaded++;
 
-  if (gfxLoaded == 2){
+  if (gfxLoaded == 3){
     addGameView();
   }
 }
@@ -183,7 +185,7 @@ function addGameView(){
   bg2.y = -1100;
 
   //add gfx to stage and tween ship
-  stage.addChild(bg2, ship);
+  stage.addChild(bg2, ship, bullets);
 
   createjs.Tween.get(ship).to({y:400}, 1000).call(startGame);
 }
@@ -194,7 +196,7 @@ function moveShip(e){
 }
 
 
-/*
+
 function shoot(){
   var b = new createjs.Bitmap(bltImg);
 
@@ -202,11 +204,12 @@ function shoot(){
   b.y = ship.y - 20;
 
   bullets.addChild(b);
+  console.log("fired");
   stage.update();
 
   createjs.Sound.play('shot');
 }
-*/
+
 
 /*
 function addEnemy(){
@@ -227,7 +230,7 @@ function startGame(){
   stage.on("stagemousemove", moveShip);
 
 //  bg.onPress = shoot;
-//bg2.onPress = shoot;
+    bg2.on("click", shoot);
 
   //createjs.Ticker.on(tkr, false);
   //tkr.tick = update;
@@ -248,7 +251,7 @@ function update(){
     bg2.y =-1100;
   }
 
-  /*
+
   //move bullets
   for (var i=0; i<bullets.children.length; i++){
     bullets.children[i].y -= 10;
@@ -258,7 +261,7 @@ function update(){
       bullets.removeChildAt(i);
     }
   }
-
+  /*
   //show boss
   if(parseInt(score.text) >= 500 && boss == null){
     boss = new createjs.Bitmap(bImg);
