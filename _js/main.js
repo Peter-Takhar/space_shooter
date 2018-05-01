@@ -69,21 +69,21 @@ function Main()
   stage.mouseEventsEnabled = true;
 
   //sound
-  var assetPath = "resources/";
+  var assetPath = "./resources/";
   var sounds = [
-    {src:"explosion.wav", id:"mExplo"},
+  //{src:"explosion.wav", id:"mExplo"},
     {src:"shot.wav", id:"mShot"},
     {src:"Battle Lines.mp3", id:"mMain"},
-    {src:"Palpitations.mp3", id:"mBoss"},
-    {src:"Last Stand.mp3", id:"mBuildup"}
+    //{src:"Palpitations.mp3", id:"mBoss"},
+    //{src:"Last Stand.mp3", id:"mBuildup"}
   ];
   //array of extensions used when loading sound
   createjs.Sound.alternateExtensions = ["mp3", "wav"];
   createjs.Sound.on("fileload", handleLoad);
 
-  //createjs.Sound.registerSounds(sounds, assetPath); --> have to fix 4 mutiple
+  createjs.Sound.registerSounds(sounds, assetPath);
 
-  createjs.Sound.registerSound(assetPath + sounds[2].src, sounds[2].id);
+  //createjs.Sound.registerSound(assetPath + sounds[2].src, sounds[2].id);
   function handleLoad(e){
     //make an AbstractSoundIstance to control sound
     mIstance = createjs.Sound.play("mMain", {loop:-1});
@@ -208,7 +208,7 @@ function shoot(){
   console.log("fired");
   stage.update();
 
-  createjs.Sound.play('shot');
+  createjs.Sound.play('mShot');
 }
 
 
