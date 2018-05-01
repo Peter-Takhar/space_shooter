@@ -102,9 +102,9 @@ function Main()
   sImg.name = 'ship';
   sImg.onload = loadGfx;
 
-  eImg.src = 'resources/enemy1.png';
+  eImg.src = 'resources/enemy.png';
   eImg.name = 'enemy';
-//  eImg.onload = loadGfx;
+  eImg.onload = loadGfx;
 
   bImg.src = 'resources/boss.png';
   bImg.name = 'boss';
@@ -142,10 +142,11 @@ function loadGfx(e){
   //if (e.target.name = 'bg'){bg = new createjs.Bitmap(bgImg);}
   if (e.target.name = 'bg2'){bg2 = new createjs.Bitmap(bg2Img);}
   if (e.target.name = 'ship'){ship = new createjs.Bitmap(sImg);}
-
+  if (e.target.name = 'enemy')
+    console.log("enemy");
   gfxLoaded++;
 
-  if (gfxLoaded == 3){
+  if (gfxLoaded == 4){
     addGameView();
   }
 }
@@ -186,7 +187,7 @@ function addGameView(){
   bg2.y = -1100;
 
   //add gfx to stage and tween ship
-  stage.addChild(bg2, ship, bullets);
+  stage.addChild(bg2, ship, bullets, enemies);
 
   createjs.Tween.get(ship).to({y:400}, 1000).call(startGame);
 }
@@ -205,14 +206,13 @@ function shoot(){
   b.y = ship.y - 30;
 
   bullets.addChild(b);
-  console.log("fired");
-  stage.update();
+  //stage.update();
 
   createjs.Sound.play('mShot');
 }
 
 
-/*
+
 function addEnemy(){
   var e = new createjs.Bitmap(eImg);
 
@@ -220,12 +220,13 @@ function addEnemy(){
   e.y = -50;
 
   enemies.addChild(e);
-  stage.update();
+  //stage.update();
 }
-*/
+
 
 //function to add listeners to stage and time
-
+var limit = 0;
+var time;
 function startGame(){
 
   stage.on("stagemousemove", moveShip);
@@ -236,6 +237,16 @@ function startGame(){
   //createjs.Ticker.on(tkr, false);
   //tkr.tick = update;
 
+  stage.addEventListener("tick", handleEnemy);
+
+  function handleEnemy(e){
+     time = parseInt(createjs.Ticker.getTime());
+     if ((time-3000)>limit){
+        console.log(time);
+        limit = time;
+        addEnemy();
+      }
+  }
   //timerSource = setInterval('addEnemy()', 1000);
 }
 
@@ -275,16 +286,17 @@ function update(){
     stage.addChild(boss);
     Tween.get(boss).to({y:40}, 2000); //twwen the boss onto the play area
   }
+  */
 
   //move enemies
   for (var j=0; j<enemies.children.length; j++){
     enemies.children[j].y += 5;
-
     //remove offstage enemies
     if (enemies.children[j].y > 480 + 50){
       enemies.removeChildAt(j);
     }
-
+  }
+    /*
     for (var k = 0; k<bullets.children.length; k++){
       //bullet - enemy collision
       if(bullets.children[k].x >= enemies.children[j].x &&
