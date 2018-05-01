@@ -69,22 +69,22 @@ function Main()
   stage.mouseEventsEnabled = true;
 
   //sound
-  var assetPath = "./resources/";
-  var sounds = [
-  //{src:"explosion.wav", id:"mExplo"},
-    {src:"shot.wav", id:"mShot"},
-    {src:"Battle Lines.mp3", id:"mMain"},
-    //{src:"Palpitations.mp3", id:"mBoss"},
-    //{src:"Last Stand.mp3", id:"mBuildup"}
-  ];
-  //array of extensions used when loading sound
-  createjs.Sound.alternateExtensions = ["mp3", "wav"];
-  createjs.Sound.on("fileload", handleLoad);
 
-  createjs.Sound.registerSounds(sounds, assetPath);
+  var queue = new createjs.LoadQueue();
+  queue.installPlugin(createjs.Sound);
+  queue.on("complete", handleComplete);
+  var assetPath = "./resources/";
+  queue.loadManifest([
+    {id:"mShot", src:assetPath + "shot.wav"},
+    {id:"mExplo", src:assetPath + "explosion.wav"},
+    {id:"mMain", src:assetPath + "Battle Lines.mp3"},
+    {id:"mBoss", src:assetPath + "Palpitations.mp3"},
+    {id:"mBuildup", src:assetPath + "Last Stand.mp3"}
+  ]);
+
 
   //createjs.Sound.registerSound(assetPath + sounds[2].src, sounds[2].id);
-  function handleLoad(e){
+  function handleComplete(e){
     //make an AbstractSoundIstance to control sound
     mIstance = createjs.Sound.play("mMain", {loop:-1});
   }
@@ -139,7 +139,6 @@ function Main()
 //createjs.Bitmap used to draw an source image
 function loadGfx(e){
 
-  //if (e.target.name = 'bg'){bg = new createjs.Bitmap(bgImg);}
   if (e.target.name = 'bg2'){bg2 = new createjs.Bitmap(bg2Img);}
   if (e.target.name = 'ship'){ship = new createjs.Bitmap(sImg);}
 
@@ -212,7 +211,7 @@ function addEnemy(){
   e.y = -50;
 
   enemies.addChild(e);
-  //stage.update();
+
 }
 
 
@@ -285,13 +284,10 @@ function update(){
       if(bullets.children[k].x+9 >= enemies.children[j].x &&
           bullets.children[k].x <= enemies.children[j].x+48 &&
           bullets.children[k].y < enemies.children[j].y+43){
-
-                console.log("bullets: " + bullets.children[k].x);
-                console.log("enemies: " + enemies.children[j].x);
                 bullets.removeChildAt(k);
                 enemies.removeChildAt(j);
 
-                createjs.Sound.play('explo');
+                createjs.Sound.play('mExplo');
                 score.text = parseInt(score.text + 50, 10);
               }
       }
