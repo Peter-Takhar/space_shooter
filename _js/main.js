@@ -168,25 +168,21 @@ function addGameView(){
     l.y = 450;
 
     lives.addChild(l);
-    //stage.update();
   }
 
-  /*
+
   //score text
-
-
   score = new createjs.Text('0', 'bold 14px Courier New', '#FFFFFF');
-  score.maxWidth = 1000; // fix for Chrome 17
   score.x = 2;
-  score.y = 476;
-  */
+  score.y = 460;
+
 
 
   //second background
   bg2.y = -1100;
 
   //add gfx to stage and tween ship
-  stage.addChild(bg2, ship, bullets, enemies, lives);
+  stage.addChild(bg2, ship, bullets, enemies, lives, score);
 
   createjs.Tween.get(ship).to({y:400}, 1000).call(startGame);
 }
