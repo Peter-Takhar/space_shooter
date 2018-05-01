@@ -170,13 +170,10 @@ function addGameView(){
     lives.addChild(l);
   }
 
-
   //score text
   score = new createjs.Text('0', 'bold 14px Courier New', '#FFFFFF');
   score.x = 2;
   score.y = 460;
-
-
 
   //second background
   bg2.y = -1100;
@@ -226,11 +223,7 @@ function startGame(){
 
   stage.on("stagemousemove", moveShip);
 
-//  bg.onPress = shoot;
-    bg2.on("click", shoot);
-
-  //createjs.Ticker.on(tkr, false);
-  //tkr.tick = update;
+  bg2.on("click", shoot);
 
   stage.addEventListener("tick", handleEnemy);
 
@@ -241,18 +234,14 @@ function startGame(){
         addEnemy();
       }
   }
-  //timerSource = setInterval('addEnemy()', 1000);
+
 }
 
 
 
 function update(){
-  //loop the background to make it appear moving
-  //bg.y += 5;
   bg2.y += 5;
 
- //if(bg.y >= 480){
-  //  bg.y = -480;
   if (bg2.y >= 0){
     bg2.y =-1100;
   }
@@ -260,7 +249,7 @@ function update(){
 
   //move bullets
   for (var i=0; i<bullets.children.length; i++){
-    bullets.children[i].y -= 10 ;
+    bullets.children[i].y -= 10;
 
     //remove offstage bullets
     if (bullets.children[i].y < -20){
@@ -289,20 +278,25 @@ function update(){
     if (enemies.children[j].y > 480 + 50){
       enemies.removeChildAt(j);
     }
-  }
-    /*
+
+
     for (var k = 0; k<bullets.children.length; k++){
       //bullet - enemy collision
-      if(bullets.children[k].x >= enemies.children[j].x &&
-          bullets.children[k].x + 11 < enemies.children[j].x + 49 &&
-              bullets.children[k].y < enemies.children[j].y + 40){
+      if(bullets.children[k].x+9 >= enemies.children[j].x &&
+          bullets.children[k].x <= enemies.children[j].x+48 &&
+          bullets.children[k].y < enemies.children[j].y+43){
+
+                console.log("bullets: " + bullets.children[k].x);
+                console.log("enemies: " + enemies.children[j].x);
                 bullets.removeChildAt(k);
                 enemies.removeChildAt(j);
-                stage.update();
-                createjs.Sound.play('explo');
-                score.text = parseFloat(score.text + 50);
-              }
 
+                createjs.Sound.play('explo');
+                score.text = parseInt(score.text + 50, 10);
+              }
+      }
+    }
+      /*
       if(boss != null && bullets.children[k].x >= boss.x
           && bullets.children[k].x + 11 < boss.x + 183 &&
             bullets.children[k].y < boss.y +162){
