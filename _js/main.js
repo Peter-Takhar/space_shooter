@@ -110,9 +110,9 @@ function Main()
   bImg.name = 'boss';
 //  bImg.onload = loadGfx;
 
-  lImg.src = 'resources/live.png';
-  lImg.name = 'live';
-//  lImg.onload = loadGfx;
+  lImg.src = 'resources/life.png';
+  lImg.name = 'life';
+  lImg.onload = loadGfx;
 
   bltImg.src = 'resources/bullet.png';
   bltImg.name = 'bullet';
@@ -142,11 +142,10 @@ function loadGfx(e){
   //if (e.target.name = 'bg'){bg = new createjs.Bitmap(bgImg);}
   if (e.target.name = 'bg2'){bg2 = new createjs.Bitmap(bg2Img);}
   if (e.target.name = 'ship'){ship = new createjs.Bitmap(sImg);}
-  if (e.target.name = 'enemy')
-    console.log("enemy");
+
   gfxLoaded++;
 
-  if (gfxLoaded == 4){
+  if (gfxLoaded == 5){
     addGameView();
   }
 }
@@ -160,19 +159,19 @@ function addGameView(){
   ship.x = centerX - 18.5;
   ship.y = 480 + 34;
 
-  /*
+
   //add lives
   for (var i=0; i<3; i++){
     var l = new createjs.Bitmap(lImg);
 
-    l.x = 248 + (25 * i);
-    l.y = 463;
+    l.x = 220 + (30 * i);
+    l.y = 450;
 
     lives.addChild(l);
-    stage.update();
+    //stage.update();
   }
 
-
+  /*
   //score text
 
 
@@ -187,7 +186,7 @@ function addGameView(){
   bg2.y = -1100;
 
   //add gfx to stage and tween ship
-  stage.addChild(bg2, ship, bullets, enemies);
+  stage.addChild(bg2, ship, bullets, enemies, lives);
 
   createjs.Tween.get(ship).to({y:400}, 1000).call(startGame);
 }
@@ -242,7 +241,6 @@ function startGame(){
   function handleEnemy(e){
      time = parseInt(createjs.Ticker.getTime());
      if ((time-3000)>limit){
-        console.log(time);
         limit = time;
         addEnemy();
       }
