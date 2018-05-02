@@ -82,7 +82,6 @@ function Main()
     {id:"mBuildup", src:assetPath + "Last Stand.mp3"}
   ]);
 
-
   //createjs.Sound.registerSound(assetPath + sounds[2].src, sounds[2].id);
   function handleComplete(e){
     //make an AbstractSoundIstance to control sound
@@ -291,7 +290,7 @@ function update(){
                 score.text = parseInt(score.text + 50, 10);
               }
       }
-    }
+
       /*
       if(boss != null && bullets.children[k].x >= boss.x
           && bullets.children[k].x + 11 < boss.x + 183 &&
@@ -303,7 +302,22 @@ function update(){
               score.text = parseInt(score.text + 50);
             }
     }
+    */
+    //ship-enemy collision
+    if(enemies.children[j].x+48 >= ship.x &&
+        enemies.children[j].x <= ship.x+100 &&
+          enemies.children[j].y+43 >= ship.y &&
+            enemies.children[j].y <= ship.y+100){
+              console.log("collision");
+              enemies.removeChildAt(j);
+              lives.removeChildAt(lives.numChildren-1);
+              ship.y = 480+34;
+              createjs.Tween.get(ship).to({y:400},500);
+              createjs.Sound.play('explo');
+            }
+     }
 
+    /*
     //ship - enemy collision
     if(enemies.hitTest(ship.x, ship.y) ||
         enemies.hitTest(ship.x + 37, ship.y)){
