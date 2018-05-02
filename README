@@ -12,3 +12,7 @@ April 31, 2018 --> Added enemy spawning
                --> Added bullet collision with enemies
                --> Implemented preload.js for preloading
                --> Added basic score counter
+
+May 1, 2018  --->Implemented lives counter
+             --->added boss spawning
+             --->added bullet+boss collisions
