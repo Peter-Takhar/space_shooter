@@ -44,7 +44,7 @@ var lose;
 var lives = new createjs.Container(); //stores the lives gfx
 var bullets = new createjs.Container(); //stores the bullets gfx
 var enemies = new createjs.Container(); // stores the enemies gfx
-var bossHelath = 20;
+var bossHealth = 20;
 var score;
 var gfxLoaded = 0; //used as a preloader, counts the already loaded items
 var centerX = 160;
@@ -228,7 +228,7 @@ stage.on("stagemousemove", moveShip);
 
   function handleEnemy(e){
      time = parseInt(createjs.Ticker.getTime());
-     if ((time-3000)>limit){
+     if (time-2500>limit){
         limit = time;
         addEnemy();
       }
@@ -255,7 +255,7 @@ function update(){
       bullets.removeChildAt(i);
     }
   }
-  /*
+
   //show boss
   if(parseInt(score.text) >= 500 && boss == null){
     boss = new createjs.Bitmap(bImg);
@@ -266,9 +266,9 @@ function update(){
     boss.y = -183;
 
     stage.addChild(boss);
-    Tween.get(boss).to({y:40}, 2000); //twwen the boss onto the play area
+    createjs.Tween.get(boss).to({y:40}, 2000); //twwen the boss onto the play area
   }
-  */
+
 
   //move enemies
   for (var j=0; j<enemies.children.length; j++){
@@ -281,7 +281,8 @@ function update(){
 
     for (var k = 0; k<bullets.children.length; k++){
       //bullet - enemy collision
-      if(bullets.children[k].x+9 >= enemies.children[j].x &&
+      if(enemies.numChildren > 0 &&
+          bullets.children[k].x+9 >= enemies.children[j].x &&
           bullets.children[k].x <= enemies.children[j].x+48 &&
           bullets.children[k].y < enemies.children[j].y+43){
                 bullets.removeChildAt(k);
@@ -290,20 +291,19 @@ function update(){
                 createjs.Sound.play('mExplo');
                 score.text = parseInt(score.text + 50, 10);
               }
+
+        if (boss != null &&
+              bullets.children[k].x+9 >= boss.x &&
+                bullets.children[k].x <= boss.x+198 &&
+                  bullets.children[k].y <= boss.y+187){
+                    bullets.removeChildAt(k);
+                    bossHealth--;
+                    createjs.Sound.play('explo');
+                    score.text = parseInt(score.text+50);
+                  }
       }
 
-      /*
-      if(boss != null && bullets.children[k].x >= boss.x
-          && bullets.children[k].x + 11 < boss.x + 183 &&
-            bullets.children[k].y < boss.y +162){
-              bullets.removeChildAt(k);
-              bossHealth--;
-              stage.update();
-              createjs.Sound.play('explo');
-              score.text = parseInt(score.text + 50);
-            }
-    }
-    */
+    
     //ship-enemy collision
     if(enemies.children[j].x+48 >= ship.x &&
         enemies.children[j].x <= ship.x+100 &&
@@ -318,22 +318,16 @@ function update(){
      }
 
     /*
-    //ship - enemy collision
+    //ship - enemy collision using hitTest
     if(enemies.hitTest(ship.x, ship.y) ||
         enemies.hitTest(ship.x + 37, ship.y)){
-          enemies.removeChildAt(j);
-          lives.removeChildAt(lives.length);
-          ship.y = 480 + 34;
-          Tween.get(ship).to({y:425}, 500);
-          createjs.Sound.play('explo');
-    }
-  }
+    */
 
   //check for win
   if (boss != null && bossHealth <= 0){
     alert('win');
   }
-  */
+
   //check for lose
   if(lives.numChildren <= 0){
     alert('lose');
@@ -347,6 +341,7 @@ function alert(e){
   stage.mouseEventsEnabled = false;
   stage.removeAllEventListeners();
   bg2.removeAllEventListeners();
+  createjs.
   end = true;
 
   //display currect message
@@ -361,7 +356,7 @@ function alert(e){
     lose.x = centerX - 64;
     lose.y = centerY - 23;
     stage.addChild(lose);
-    stage.removeChild(enemies, ship);
+    stage.removeChild(enemies, ship, boss);
   }
 
   bg2.onPress = function() {window.location.reload();};
