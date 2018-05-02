@@ -49,8 +49,7 @@ var score;
 var gfxLoaded = 0; //used as a preloader, counts the already loaded items
 var centerX = 160;
 var centerY = 240;
-var tkr = new Object(); //used as a Ticker listener
-var timerSource; //references a setInterval method
+var end = false;
 
 
 //bullet spritesheet
@@ -128,6 +127,8 @@ function Main()
   //Ticker
   createjs.Ticker.on("tick", handleTick);
   function handleTick(e){
+    if (end)
+      e.remove();
     update();
     stage.update();
   }
@@ -219,7 +220,7 @@ var limit = 0;
 var time;
 function startGame(){
 
-  stage.on("stagemousemove", moveShip);
+stage.on("stagemousemove", moveShip);
 
   bg2.on("click", shoot);
 
@@ -308,7 +309,6 @@ function update(){
         enemies.children[j].x <= ship.x+100 &&
           enemies.children[j].y+43 >= ship.y &&
             enemies.children[j].y <= ship.y+100){
-              console.log("collision");
               enemies.removeChildAt(j);
               lives.removeChildAt(lives.numChildren-1);
               ship.y = 480+34;
@@ -333,25 +333,21 @@ function update(){
   if (boss != null && bossHealth <= 0){
     alert('win');
   }
-
+  */
   //check for lose
-  if(lives.children.length <= 0){
+  if(lives.numChildren <= 0){
     alert('lose');
   }
-  */
+
 }
 
-/*
+
 function alert(e){
   //remove listeners
-  stage.onMouseMove = null;
-  bg.onPress = null;
-  bg2.onPress = null;
-
-  createjs.Ticker.removeListener(tkr);
-  tkr = null;
-
-  timerSource = null;
+  stage.mouseEventsEnabled = false;
+  stage.removeAllEventListeners();
+  bg2.removeAllEventListeners();
+  end = true;
 
   //display currect message
   if (e == 'win'){
@@ -368,9 +364,6 @@ function alert(e){
     stage.removeChild(enemies, ship);
   }
 
-  bg.onPress = function() {window.location.reload();};
   bg2.onPress = function() {window.location.reload();};
   stage.update();
-
 }
-*/
