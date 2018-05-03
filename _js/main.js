@@ -44,7 +44,7 @@ var lose;
 var lives = new createjs.Container(); //stores the lives gfx
 var bullets = new createjs.Container(); //stores the bullets gfx
 var enemies = new createjs.Container(); // stores the enemies gfx
-var bossHealth = 20;
+var bossHealth = 25;
 var score;
 var gfxLoaded = 0; //used as a preloader, counts the already loaded items
 var centerX = 160;
@@ -56,7 +56,11 @@ var end = false;
 var bulletSpritesheet;
 
 //music
-var mInstance = null;
+var mMain = null;
+var mBoss = null;
+
+var isBossLevel = false;
+
 function Main()
 {
   //link canvas to stage
@@ -81,10 +85,10 @@ function Main()
     {id:"mBuildup", src:assetPath + "Last Stand.mp3"}
   ]);
 
-  //createjs.Sound.registerSound(assetPath + sounds[2].src, sounds[2].id);
   function handleComplete(e){
     //make an AbstractSoundIstance to control sound
-    mIstance = createjs.Sound.play("mMain", {loop:-1});
+    mMain = createjs.Sound.play("mMain", {loop:-1});
+
   }
 
   //load gfx
@@ -106,7 +110,7 @@ function Main()
 
   bImg.src = 'resources/boss.png';
   bImg.name = 'boss';
-//  bImg.onload = loadGfx;
+  bImg.onload = loadGfx;
 
   lImg.src = 'resources/life.png';
   lImg.name = 'life';
@@ -118,11 +122,11 @@ function Main()
 
   winImg.src = 'resources/win.png';
   winImg.name = 'win';
-//  winImg.onload = loadGfx;
+  winImg.onload = loadGfx;
 
   loseImg.src = 'resources/lose.png';
   loseImg.name = 'lose';
-  //loseImg.onload = loadGfx;
+  loseImg.onload = loadGfx;
 
   //Ticker
   createjs.Ticker.on("tick", handleTick);
@@ -144,7 +148,7 @@ function loadGfx(e){
 
   gfxLoaded++;
 
-  if (gfxLoaded == 5){
+  if (gfxLoaded == 8){
     addGameView();
   }
 }
@@ -152,12 +156,9 @@ function loadGfx(e){
 
 //function adds Game UI elements after graphics are gfxLoaded
 //  such as lives counter, backgrounds, etc.
-
 function addGameView(){
-
   ship.x = centerX - 18.5;
   ship.y = 480 + 34;
-
 
   //add lives
   for (var i=0; i<3; i++){
@@ -168,7 +169,6 @@ function addGameView(){
 
     lives.addChild(l);
   }
-
   //score text
   score = new createjs.Text('0', 'bold 14px Courier New', '#FFFFFF');
   score.x = 2;
@@ -197,7 +197,6 @@ function shoot(){
   b.y = ship.y - 30;
 
   bullets.addChild(b);
-  //stage.update();
 
   createjs.Sound.play('mShot');
 }
@@ -223,12 +222,11 @@ function startGame(){
 stage.on("stagemousemove", moveShip);
 
   bg2.on("click", shoot);
-
   stage.addEventListener("tick", handleEnemy);
 
   function handleEnemy(e){
      time = parseInt(createjs.Ticker.getTime());
-     if (time-2500>limit){
+     if (time-1700>limit){
         limit = time;
         addEnemy();
       }
@@ -236,15 +234,12 @@ stage.on("stagemousemove", moveShip);
 
 }
 
-
-
 function update(){
   bg2.y += 5;
 
   if (bg2.y >= 0){
     bg2.y =-1100;
   }
-
 
   //move bullets
   for (var i=0; i<bullets.children.length; i++){
@@ -259,8 +254,9 @@ function update(){
   //show boss
   if(parseInt(score.text) >= 500 && boss == null){
     boss = new createjs.Bitmap(bImg);
-
-    createjs.Sound.play('boss');
+    isBossLevel = true;
+    mMain = mMain.stop();
+    mBoss = createjs.Sound.play('mBoss', {loop: -1});
 
     boss.x = centerX - 90;
     boss.y = -183;
@@ -278,21 +274,19 @@ function update(){
       enemies.removeChildAt(j);
     }
 
-
     for (var k = 0; k<bullets.children.length; k++){
       //bullet - enemy collision
       if(enemies.numChildren > 0 &&
           bullets.children[k].x+9 >= enemies.children[j].x &&
-          bullets.children[k].x <= enemies.children[j].x+48 &&
-          bullets.children[k].y < enemies.children[j].y+43){
+            bullets.children[k].x <= enemies.children[j].x+48 &&
+              bullets.children[k].y < enemies.children[j].y+43){
                 bullets.removeChildAt(k);
                 enemies.removeChildAt(j);
-
                 createjs.Sound.play('mExplo');
                 score.text = parseInt(score.text + 50, 10);
               }
 
-        if (boss != null &&
+        if (boss != null && bullets.numChildren > 0 &&
               bullets.children[k].x+9 >= boss.x &&
                 bullets.children[k].x <= boss.x+198 &&
                   bullets.children[k].y <= boss.y+187){
@@ -303,12 +297,13 @@ function update(){
                   }
       }
 
-    
+
     //ship-enemy collision
-    if(enemies.children[j].x+48 >= ship.x &&
-        enemies.children[j].x <= ship.x+100 &&
-          enemies.children[j].y+43 >= ship.y &&
-            enemies.children[j].y <= ship.y+100){
+    if(enemies.numChildren > 0 &&
+        enemies.children[j].x+48 >= ship.x &&
+          enemies.children[j].x <= ship.x+100 &&
+            enemies.children[j].y+43 >= ship.y &&
+              enemies.children[j].y <= ship.y+100){
               enemies.removeChildAt(j);
               lives.removeChildAt(lives.numChildren-1);
               ship.y = 480+34;
@@ -341,22 +336,26 @@ function alert(e){
   stage.mouseEventsEnabled = false;
   stage.removeAllEventListeners();
   bg2.removeAllEventListeners();
-  createjs.
-  end = true;
 
+  end = true;
+  mMain = mMain.stop();
+  if (isBossLevel)
+    mBoss = mBoss.stop();
+  createjs.Sound.play('mBuildup', {loop: -1});
   //display currect message
   if (e == 'win'){
-    win = new createjs.Bitmap(winImg);
-    win.x = centerX - 64;
-    win.y = centerY - 23;
-    stage.addChild(win);
-    stage.removeChild(enemies, boss);
+      win = new createjs.Bitmap(winImg);
+
+      win.x = centerX - 64;
+      win.y = centerY - 23;
+      stage.addChild(win);
+      stage.removeChild(enemies, boss, ship, bullets);
   } else {
-    lose= new createjs.Bitmap(loseImg);
-    lose.x = centerX - 64;
-    lose.y = centerY - 23;
-    stage.addChild(lose);
-    stage.removeChild(enemies, ship, boss);
+      lose= new createjs.Bitmap(loseImg);
+      lose.x = centerX - 64;
+      lose.y = centerY - 23;
+      stage.addChild(lose);
+      stage.removeChild(enemies, ship, boss, bullets);
   }
 
   bg2.onPress = function() {window.location.reload();};
