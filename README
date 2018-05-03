@@ -4,15 +4,18 @@ By: Parminder Takhar
 A simple Space shooter game made using CreateJS.
 
 April 30, 2018 --> Very barebones right now.
-               -->Added ship + movement functionality
-               -->Added shoot functionality
-               -->Added moving placeholder background
+               --> Added ship + movement functionality
+               --> Added shoot functionality
+               --> Added moving placeholder background
 
 April 31, 2018 --> Added enemy spawning
                --> Added bullet collision with enemies
                --> Implemented preload.js for preloading
                --> Added basic score counter
 
-May 1, 2018  --->Implemented lives counter
-             --->added boss spawning
-             --->added bullet+boss collisions
+May 1, 2018  ---> Minimum Viable Project completed
+             ---> Implemented lives counter
+             ---> Added boss spawning
+             ---> Added bullet+boss collisions
+             ---> Added win condition
+             ---> Added boss and end game music
